@@ -40,15 +40,14 @@ function TotalCard({
   const averageHour =
     totalHourMoney / 177 / workedDays;
 
-  const cardStyle = {
-    background: "#ffffff",
-    borderRadius: "18px",
-    padding: "18px",
-    boxShadow:
-      "0 4px 12px rgba(0,0,0,0.08)",
-    textAlign: "center" as const,
-  };
-
+const cardStyle = {
+  background: "#ffffff",
+  borderRadius: "14px",
+  padding: "12px",
+  boxShadow:
+    "0 3px 8px rgba(0,0,0,0.08)",
+  textAlign: "center" as const,
+};
   return (
     <div
       style={{
@@ -65,39 +64,39 @@ function TotalCard({
         }}
       >
         <div style={cardStyle}>
-          <div style={{ fontSize: "26px" }}>
+          <div style={{ fontSize: "20px" }}>
             💰
           </div>
 
           <p
             style={{
-              margin: "8px 0",
-              color: "#666",
-            }}
+    margin: 0,
+    fontSize: "22px",
+  }}
           >
             Toplam Kazanç
           </p>
 
           <h2
-            style={{
-              color: "#ff6b00",
-              margin: 0,
-            }}
+             style={{
+    margin: 0,
+    fontSize: "22px",
+  }}
           >
             {generalTotal.toFixed(0)} TL
           </h2>
         </div>
 
         <div style={cardStyle}>
-          <div style={{ fontSize: "26px" }}>
+          <div style={{ fontSize: "20px" }}>
             📦
           </div>
 
           <p
-            style={{
-              margin: "8px 0",
-              color: "#666",
-            }}
+             style={{
+    margin: 0,
+    fontSize: "22px",
+  }}
           >
             Toplam Paket
           </p>
@@ -108,15 +107,15 @@ function TotalCard({
         </div>
 
         <div style={cardStyle}>
-          <div style={{ fontSize: "26px" }}>
+          <div style={{ fontSize: "20px" }}>
             🎯
           </div>
 
           <p
-            style={{
-              margin: "8px 0",
-              color: "#666",
-            }}
+             style={{
+    margin: 0,
+    fontSize: "22px",
+  }}
           >
             Hedef
           </p>
@@ -127,15 +126,15 @@ function TotalCard({
         </div>
 
         <div style={cardStyle}>
-          <div style={{ fontSize: "26px" }}>
+          <div style={{ fontSize: "20px" }}>
             📈
           </div>
 
           <p
-            style={{
-              margin: "8px 0",
-              color: "#666",
-            }}
+             style={{
+    margin: 0,
+    fontSize: "22px",
+  }}
           >
             Aylık Bonus
           </p>
@@ -146,39 +145,39 @@ function TotalCard({
         </div>
 
         <div style={cardStyle}>
-          <div style={{ fontSize: "26px" }}>
+          <div style={{ fontSize: "20px" }}>
             🏖️
           </div>
 
           <p
-            style={{
-              margin: "8px 0",
-              color: "#666",
-            }}
+             style={{
+    margin: 0,
+    fontSize: "22px",
+  }}
           >
             İzin Günü
           </p>
 
           <h2
-            style={{
-              margin: 0,
-              color: "#d9534f",
-            }}
+              style={{
+    margin: 0,
+    fontSize: "22px",
+  }}
           >
             {vacationDays}
           </h2>
         </div>
 
         <div style={cardStyle}>
-          <div style={{ fontSize: "26px" }}>
+          <div style={{ fontSize: "20px" }}>
             📊
           </div>
 
           <p
-            style={{
-              margin: "8px 0",
-              color: "#666",
-            }}
+              style={{
+    margin: 0,
+    fontSize: "22px",
+  }}
           >
             Ort. Paket
           </p>
@@ -188,10 +187,17 @@ function TotalCard({
           </h2>
         </div>
 
-        <div style={cardStyle}>
-          <div style={{ fontSize: "26px" }}>
-            ⏰
-          </div>
+       <div
+  style={{
+    ...cardStyle,
+    gridColumn: "1 / span 2",
+    maxWidth: "220px",
+    margin: "0 auto",
+  }}
+>
+  <div style={{ fontSize: "20px" }}>
+    ⏰
+  </div>
 
           <p
             style={{
@@ -254,7 +260,7 @@ function TotalCard({
               color: "#155724",
               padding: "12px",
               borderRadius: "12px",
-              marginTop: "10px",
+              marginTop: "px30"
             }}
           >
             🎉 Tebrikler!

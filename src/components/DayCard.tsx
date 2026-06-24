@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 type Props = {
   day: number;
@@ -21,37 +21,36 @@ function DayCard({
   onHourChange,
   onPkgChange,
 }: Props) {
-  const [open, setOpen] =
-    useState(false);
+  const [open, setOpen] = useState(false);
 
   const hourIncome = hour * 177;
+  const packageInputRef = useRef<HTMLInputElement>(null);
 
-  const totalIncome =
-    hourIncome + bonus;
+  useEffect(() => {
+    if (open) {
+      packageInputRef.current?.focus();
+    }
+  }, [open]);
+
+  const totalIncome = hourIncome + bonus;
 
   return (
     <div
       style={{
-        background: vacation
-          ? "#f5f5f5"
-          : "#fff",
+        background: vacation ? "#f5f5f5" : "#fff",
         margin: "12px 15px",
         borderRadius: "20px",
-        boxShadow:
-          "0 6px 18px rgba(0,0,0,.08)",
+        boxShadow: "0 6px 18px rgba(0,0,0,.08)",
         overflow: "hidden",
       }}
     >
       <div
-        onClick={() =>
-          setOpen(!open)
-        }
+        onClick={() => setOpen(!open)}
         style={{
           padding: "18px",
           cursor: "pointer",
           display: "flex",
-          justifyContent:
-            "space-between",
+          justifyContent: "space-between",
           alignItems: "center",
         }}
       >
@@ -99,15 +98,13 @@ function DayCard({
       {open && (
         <div
           style={{
-            padding:
-              "0 18px 18px 18px",
+            padding: "0 18px 18px 18px",
           }}
         >
           <div
             style={{
               display: "flex",
-              justifyContent:
-                "space-between",
+              justifyContent: "space-between",
               alignItems: "center",
               marginBottom: 15,
             }}
@@ -123,10 +120,8 @@ function DayCard({
 
             <label
               style={{
-                position:
-                  "relative",
-                display:
-                  "inline-block",
+                position: "relative",
+                display: "inline-block",
                 width: "52px",
                 height: "28px",
               }}
@@ -134,11 +129,7 @@ function DayCard({
               <input
                 type="checkbox"
                 checked={vacation}
-                onChange={(e) =>
-                  onVacationChange(
-                    e.target.checked
-                  )
-                }
+                onChange={(e) => onVacationChange(e.target.checked)}
                 style={{
                   display: "none",
                 }}
@@ -146,36 +137,24 @@ function DayCard({
 
               <span
                 style={{
-                  position:
-                    "absolute",
+                  position: "absolute",
                   inset: 0,
-                  background:
-                    vacation
-                      ? "#ff6b00"
-                      : "#ccc",
-                  borderRadius:
-                    "999px",
-                  transition:
-                    ".3s",
+                  background: vacation ? "#ff6b00" : "#ccc",
+                  borderRadius: "999px",
+                  transition: ".3s",
                 }}
               />
 
               <span
                 style={{
-                  position:
-                    "absolute",
+                  position: "absolute",
                   top: "3px",
-                  left: vacation
-                    ? "27px"
-                    : "3px",
+                  left: vacation ? "27px" : "3px",
                   width: "22px",
                   height: "22px",
-                  background:
-                    "white",
-                  borderRadius:
-                    "50%",
-                  transition:
-                    ".3s",
+                  background: "white",
+                  borderRadius: "50%",
+                  transition: ".3s",
                 }}
               />
             </label>
@@ -186,50 +165,33 @@ function DayCard({
             placeholder="Çalışılan Saat"
             value={hour || ""}
             disabled={vacation}
-            onChange={(e) =>
-              onHourChange(
-                Number(
-                  e.target.value
-                )
-              )
-            }
+            onChange={(e) => onHourChange(Number(e.target.value))}
             style={{
               width: "100%",
               padding: "12px",
-              borderRadius:
-                "12px",
-              border:
-                "1px solid #ddd",
-              marginBottom:
-                "10px",
-              boxSizing:
-                "border-box",
+              fontSize: "16px",
+              borderRadius: "12px",
+              border: "1px solid #ddd",
+              marginBottom: "10px",
+              boxSizing: "border-box",
             }}
           />
 
           <input
+            ref={packageInputRef}
             type="number"
             placeholder="Teslim Edilen Paket"
             value={pkg || ""}
             disabled={vacation}
-            onChange={(e) =>
-              onPkgChange(
-                Number(
-                  e.target.value
-                )
-              )
-            }
+            onChange={(e) => onPkgChange(Number(e.target.value))}
             style={{
               width: "100%",
               padding: "12px",
-              borderRadius:
-                "12px",
-              border:
-                "1px solid #ddd",
-              marginBottom:
-                "15px",
-              boxSizing:
-                "border-box",
+              fontSize: "16px",
+              borderRadius: "12px",
+              border: "1px solid #ddd",
+              marginBottom: "15px",
+              boxSizing: "border-box",
             }}
           />
 
@@ -237,90 +199,62 @@ function DayCard({
             <>
               <div
                 style={{
-                  display:
-                    "grid",
-                  gridTemplateColumns:
-                    "1fr 1fr",
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
                   gap: 10,
-                  marginBottom:
-                    12,
+                  marginBottom: 12,
                 }}
               >
                 <div
                   style={{
-                    background:
-                      "rgba(255,107,0,.1)",
+                    background: "rgba(255,107,0,.1)",
                     padding: 12,
-                    borderRadius:
-                      12,
+                    borderRadius: 12,
                   }}
                 >
                   <div
                     style={{
                       fontSize: 12,
-                      color:
-                        "#777",
+                      color: "#777",
                     }}
                   >
                     Saat Kazancı
                   </div>
 
-                  <strong>
-                    {hourIncome.toFixed(
-                      0
-                    )}{" "}
-                    TL
-                  </strong>
+                  <strong>{hourIncome.toFixed(0)} TL</strong>
                 </div>
 
                 <div
                   style={{
-                    background:
-                      "rgba(0,180,90,.1)",
+                    background: "rgba(0,180,90,.1)",
                     padding: 12,
-                    borderRadius:
-                      12,
+                    borderRadius: 12,
                   }}
                 >
                   <div
                     style={{
                       fontSize: 12,
-                      color:
-                        "#777",
+                      color: "#777",
                     }}
                   >
                     Günlük Bonus
                   </div>
 
-                  <strong>
-                    {bonus.toFixed(
-                      0
-                    )}{" "}
-                    TL
-                  </strong>
+                  <strong>{bonus.toFixed(0)} TL</strong>
                 </div>
               </div>
 
               <div
                 style={{
-                  background:
-                    "#ff6b00",
-                  color:
-                    "white",
+                  background: "#ff6b00",
+                  color: "white",
                   padding: 14,
-                  borderRadius:
-                    14,
-                  textAlign:
-                    "center",
-                  fontWeight:
-                    700,
+                  borderRadius: 14,
+                  textAlign: "center",
+                  fontWeight: 700,
                 }}
               >
-                💰 Günlük Toplam:{" "}
-                {totalIncome.toFixed(
-                  0
-                )}{" "}
-                TL
+                💰 Günlük Toplam: {totalIncome.toFixed(0)} TL
               </div>
             </>
           )}
@@ -328,17 +262,12 @@ function DayCard({
           {vacation && (
             <div
               style={{
-                background:
-                  "rgba(220,53,69,.1)",
+                background: "rgba(220,53,69,.1)",
                 padding: 14,
-                borderRadius:
-                  12,
-                color:
-                  "#d9534f",
-                fontWeight:
-                  700,
-                textAlign:
-                  "center",
+                borderRadius: 12,
+                color: "#d9534f",
+                fontWeight: 700,
+                textAlign: "center",
               }}
             >
               🏖️ İzinli Gün
