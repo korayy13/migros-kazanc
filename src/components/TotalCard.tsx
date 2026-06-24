@@ -3,6 +3,7 @@ type Props = {
   totalPackages: number;
   totalDailyBonus: number;
   monthlyBonus: number;
+  vacationDays: number;
 };
 
 const PACKAGE_GOAL = 1500;
@@ -12,6 +13,7 @@ function TotalCard({
   totalPackages,
   totalDailyBonus,
   monthlyBonus,
+  vacationDays,
 }: Props) {
   const progress = Math.min(
     (totalPackages / PACKAGE_GOAL) * 100,
@@ -26,56 +28,240 @@ function TotalCard({
   const goalReached =
     totalPackages >= PACKAGE_GOAL;
 
+  const workedDays =
+    Math.max(
+      1,
+      31 - vacationDays
+    );
+
+  const averagePackage =
+    totalPackages / workedDays;
+
+  const averageHour =
+    totalHourMoney / 177 / workedDays;
+
+  const cardStyle = {
+    background: "#ffffff",
+    borderRadius: "18px",
+    padding: "18px",
+    boxShadow:
+      "0 4px 12px rgba(0,0,0,0.08)",
+    textAlign: "center" as const,
+  };
+
   return (
-    <div className="total-card">
-      <h2>Toplam Saat Kazancı</h2>
-      <h1>{totalHourMoney.toFixed(2)} TL</h1>
+    <div
+      style={{
+        padding: "15px",
+      }}
+    >
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns:
+            "repeat(2, 1fr)",
+          gap: "12px",
+          marginBottom: "20px",
+        }}
+      >
+        <div style={cardStyle}>
+          <div style={{ fontSize: "26px" }}>
+            💰
+          </div>
 
-      <hr />
+          <p
+            style={{
+              margin: "8px 0",
+              color: "#666",
+            }}
+          >
+            Toplam Kazanç
+          </p>
 
-      <h2>Toplam Paket</h2>
-      <h1>{totalPackages}</h1>
+          <h2
+            style={{
+              color: "#ff6b00",
+              margin: 0,
+            }}
+          >
+            {generalTotal.toFixed(0)} TL
+          </h2>
+        </div>
 
-      <hr />
+        <div style={cardStyle}>
+          <div style={{ fontSize: "26px" }}>
+            📦
+          </div>
 
-      <h2>Toplam Günlük Bonus</h2>
-      <h1>{totalDailyBonus.toFixed(2)} TL</h1>
+          <p
+            style={{
+              margin: "8px 0",
+              color: "#666",
+            }}
+          >
+            Toplam Paket
+          </p>
 
-      <hr />
+          <h2 style={{ margin: 0 }}>
+            {totalPackages}
+          </h2>
+        </div>
 
-      <h2>Aylık Paket Bonusu</h2>
-      <h1>{monthlyBonus.toFixed(2)} TL</h1>
+        <div style={cardStyle}>
+          <div style={{ fontSize: "26px" }}>
+            🎯
+          </div>
 
-      <hr />
+          <p
+            style={{
+              margin: "8px 0",
+              color: "#666",
+            }}
+          >
+            Hedef
+          </p>
 
-      <h2>Paket Hedefi</h2>
+          <h2 style={{ margin: 0 }}>
+            %{progress.toFixed(0)}
+          </h2>
+        </div>
 
-      <div className="progress-wrapper">
-        <div
-          className="progress-bar"
-          style={{
-            width: `${progress}%`,
-          }}
-        />
+        <div style={cardStyle}>
+          <div style={{ fontSize: "26px" }}>
+            📈
+          </div>
+
+          <p
+            style={{
+              margin: "8px 0",
+              color: "#666",
+            }}
+          >
+            Aylık Bonus
+          </p>
+
+          <h2 style={{ margin: 0 }}>
+            {monthlyBonus.toFixed(0)} TL
+          </h2>
+        </div>
+
+        <div style={cardStyle}>
+          <div style={{ fontSize: "26px" }}>
+            🏖️
+          </div>
+
+          <p
+            style={{
+              margin: "8px 0",
+              color: "#666",
+            }}
+          >
+            İzin Günü
+          </p>
+
+          <h2
+            style={{
+              margin: 0,
+              color: "#d9534f",
+            }}
+          >
+            {vacationDays}
+          </h2>
+        </div>
+
+        <div style={cardStyle}>
+          <div style={{ fontSize: "26px" }}>
+            📊
+          </div>
+
+          <p
+            style={{
+              margin: "8px 0",
+              color: "#666",
+            }}
+          >
+            Ort. Paket
+          </p>
+
+          <h2 style={{ margin: 0 }}>
+            {averagePackage.toFixed(1)}
+          </h2>
+        </div>
+
+        <div style={cardStyle}>
+          <div style={{ fontSize: "26px" }}>
+            ⏰
+          </div>
+
+          <p
+            style={{
+              margin: "8px 0",
+              color: "#666",
+            }}
+          >
+            Ort. Saat
+          </p>
+
+          <h2 style={{ margin: 0 }}>
+            {averageHour.toFixed(1)}
+          </h2>
+        </div>
       </div>
 
-      <p>
-        {totalPackages} / {PACKAGE_GOAL}
-      </p>
+      <div
+        style={{
+          background: "#fff",
+          borderRadius: "18px",
+          padding: "18px",
+          boxShadow:
+            "0 4px 12px rgba(0,0,0,0.08)",
+        }}
+      >
+        <h3
+          style={{
+            marginTop: 0,
+          }}
+        >
+          Paket Hedefi
+        </h3>
 
-      {goalReached && (
-        <div className="success-box">
-          🎉 Tebrikler! Paket hedefine ulaştın!
+        <div
+          style={{
+            width: "100%",
+            height: "16px",
+            background: "#eee",
+            borderRadius: "999px",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              width: `${progress}%`,
+              height: "100%",
+              background: "#ff6b00",
+            }}
+          />
         </div>
-      )}
 
-      <hr />
+        <p>
+          {totalPackages} / {PACKAGE_GOAL}
+        </p>
 
-      <h2>Genel Toplam</h2>
-
-      <h1 style={{ color: "green" }}>
-        {generalTotal.toFixed(2)} TL
-      </h1>
+        {goalReached && (
+          <div
+            style={{
+              background: "#d4edda",
+              color: "#155724",
+              padding: "12px",
+              borderRadius: "12px",
+              marginTop: "10px",
+            }}
+          >
+            🎉 Tebrikler!
+            Hedefe ulaştın.
+          </div>
+        )}
+      </div>
     </div>
   );
 }

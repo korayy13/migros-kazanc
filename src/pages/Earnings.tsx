@@ -1,0 +1,5 @@
+function Packages() {
+  return <h1>Earnings</h1>;
+}
+
+export default Packages;
