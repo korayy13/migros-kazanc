@@ -1,23 +1,29 @@
+import { useEffect, useState } from "react";
+
 type Props = {
   totalHourMoney: number;
   totalPackages: number;
   totalDailyBonus: number;
   monthlyBonus: number;
   vacationDays: number;
+
+  packageGoal: number;
+  onGoalChange: (value: number) => void;
 };
 
-const PACKAGE_GOAL = 1500;
 
-function TotalCard({
-  totalHourMoney,
-  totalPackages,
-  totalDailyBonus,
-  monthlyBonus,
-  vacationDays,
-}: Props) {
+function TotalCard(
+  {
+    totalHourMoney,
+    totalPackages,
+    totalDailyBonus,
+    monthlyBonus,
+    vacationDays,
+    packageGoal,
+    onGoalChange,
+  }: Props) {
   const progress = Math.min(
-    (totalPackages / PACKAGE_GOAL) * 100,
-    100
+    (totalPackages / packageGoal) * 100
   );
 
   const generalTotal =
@@ -26,7 +32,7 @@ function TotalCard({
     monthlyBonus;
 
   const goalReached =
-    totalPackages >= PACKAGE_GOAL;
+    totalPackages >= packageGoal
 
   const workedDays =
     Math.max(
@@ -39,15 +45,21 @@ function TotalCard({
 
   const averageHour =
     totalHourMoney / 177 / workedDays;
+  const [goalInput, setGoalInput] = useState(
+    packageGoal.toString()
+  );
 
-const cardStyle = {
-  background: "#ffffff",
-  borderRadius: "14px",
-  padding: "12px",
-  boxShadow:
-    "0 3px 8px rgba(0,0,0,0.08)",
-  textAlign: "center" as const,
-};
+  useEffect(() => {
+    setGoalInput(packageGoal.toString());
+  }, [packageGoal]);
+  const cardStyle = {
+    background: "#ffffff",
+    borderRadius: "14px",
+    padding: "12px",
+    boxShadow:
+      "0 3px 8px rgba(0,0,0,0.08)",
+    textAlign: "center" as const,
+  };
   return (
     <div
       style={{
@@ -70,18 +82,18 @@ const cardStyle = {
 
           <p
             style={{
-    margin: 0,
-    fontSize: "22px",
-  }}
+              margin: 0,
+              fontSize: "22px",
+            }}
           >
             Toplam Kazanç
           </p>
 
           <h2
-             style={{
-    margin: 0,
-    fontSize: "22px",
-  }}
+            style={{
+              margin: 0,
+              fontSize: "22px",
+            }}
           >
             {generalTotal.toFixed(0)} TL
           </h2>
@@ -93,10 +105,10 @@ const cardStyle = {
           </div>
 
           <p
-             style={{
-    margin: 0,
-    fontSize: "22px",
-  }}
+            style={{
+              margin: 0,
+              fontSize: "22px",
+            }}
           >
             Toplam Paket
           </p>
@@ -112,10 +124,10 @@ const cardStyle = {
           </div>
 
           <p
-             style={{
-    margin: 0,
-    fontSize: "22px",
-  }}
+            style={{
+              margin: 0,
+              fontSize: "22px",
+            }}
           >
             Hedef
           </p>
@@ -131,10 +143,10 @@ const cardStyle = {
           </div>
 
           <p
-             style={{
-    margin: 0,
-    fontSize: "22px",
-  }}
+            style={{
+              margin: 0,
+              fontSize: "22px",
+            }}
           >
             Aylık Bonus
           </p>
@@ -150,19 +162,19 @@ const cardStyle = {
           </div>
 
           <p
-             style={{
-    margin: 0,
-    fontSize: "22px",
-  }}
+            style={{
+              margin: 0,
+              fontSize: "22px",
+            }}
           >
             İzin Günü
           </p>
 
           <h2
-              style={{
-    margin: 0,
-    fontSize: "22px",
-  }}
+            style={{
+              margin: 0,
+              fontSize: "22px",
+            }}
           >
             {vacationDays}
           </h2>
@@ -174,10 +186,10 @@ const cardStyle = {
           </div>
 
           <p
-              style={{
-    margin: 0,
-    fontSize: "22px",
-  }}
+            style={{
+              margin: 0,
+              fontSize: "22px",
+            }}
           >
             Ort. Paket
           </p>
@@ -187,17 +199,17 @@ const cardStyle = {
           </h2>
         </div>
 
-       <div
-  style={{
-    ...cardStyle,
-    gridColumn: "1 / span 2",
-    maxWidth: "220px",
-    margin: "0 auto",
-  }}
->
-  <div style={{ fontSize: "20px" }}>
-    ⏰
-  </div>
+        <div
+          style={{
+            ...cardStyle,
+            gridColumn: "1 / span 2",
+            maxWidth: "220px",
+            margin: "0 auto",
+          }}
+        >
+          <div style={{ fontSize: "20px" }}>
+            ⏰
+          </div>
 
           <p
             style={{
@@ -230,6 +242,35 @@ const cardStyle = {
         >
           Paket Hedefi
         </h3>
+        <input
+  type="text"
+  inputMode="numeric"
+  value={goalInput}
+  onChange={(e) => {
+    const value = e.target.value.replace(
+      /\D/g,
+      ""
+    );
+
+    setGoalInput(value);
+
+    if (value !== "") {
+      onGoalChange(Number(value));
+    }
+  }}
+  placeholder="2500"
+  style={{
+    width: "100%",
+    padding: "12px",
+    marginBottom: "15px",
+    borderRadius: "12px",
+    border: "1px solid #ddd",
+    fontSize: "18px",
+    fontWeight: 600,
+    textAlign: "center",
+    boxSizing: "border-box",
+  }}
+/>
 
         <div
           style={{
@@ -250,7 +291,7 @@ const cardStyle = {
         </div>
 
         <p>
-          {totalPackages} / {PACKAGE_GOAL}
+          {totalPackages} / {packageGoal}
         </p>
 
         {goalReached && (

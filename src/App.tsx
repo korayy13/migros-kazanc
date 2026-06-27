@@ -273,6 +273,7 @@ function App() {
             monthlyBonus={monthlyBonus}
             vacationDays={vacationDays}
             packageGoal={packageGoal}
+            onGoalChange={setPackageGoal}
           />
 
           <CalendarView
@@ -391,7 +392,16 @@ function App() {
       {currentPage === "packages" && <Packages />}
       {currentPage === "earnings" && <Earnings />}
       {currentPage === "expenses" && <Expenses />}
-      {currentPage === "statistics" && <Statistics />}
+      {currentPage === "statistics" && (
+        <Statistics
+          daysData={daysData}
+          totalHourMoney={totalHourMoney}
+          totalPackages={totalPackages}
+          totalDailyBonus={totalDailyBonus}
+          monthlyBonus={monthlyBonus}
+          vacationDays={vacationDays}
+        />
+      )}
       {currentPage === "settings" && <Settings />}
       {currentPage === "profile" && <Profile />}
     </MainLayout>
