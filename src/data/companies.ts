@@ -1,4 +1,16 @@
+export type BonusRow = {
+  pkg: number;
+  bonus: number;
+};
 
+export type Company = {
+  id: string;
+  name: string;
+  hourPrice: number;
+  packagePrice: number;
+  dailyBonusTable: BonusRow[];
+  monthlyBonusTable: BonusRow[];
+};
 export const companies: Company[] = [
 {
   id: "migros",
@@ -47,17 +59,23 @@ export const companies: Company[] = [
   name: "Trendyol Go",
   hourPrice: 180,
   packagePrice: 0,
+  dailyBonusTable: [],
+  monthlyBonusTable: [],
 },
 {
-  id: "yemeksepeti",
-  name: "Yemeksepeti",
-  hourPrice: 175,
+  id: "trendyol",
+  name: "Trendyol Go",
+  hourPrice: 180,
   packagePrice: 0,
+  dailyBonusTable: [],
+  monthlyBonusTable: [],
 },
 {
-  id: "hepsijet",
-  name: "HepsiJet",
-  hourPrice: 190,
+  id: "trendyol",
+  name: "Trendyol Go",
+  hourPrice: 180,
   packagePrice: 0,
+  dailyBonusTable: [],
+  monthlyBonusTable: [],
 },
 ];

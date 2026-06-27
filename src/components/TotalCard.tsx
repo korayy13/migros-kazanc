@@ -23,7 +23,8 @@ function TotalCard(
     onGoalChange,
   }: Props) {
   const progress = Math.min(
-    (totalPackages / packageGoal) * 100
+    (totalPackages / packageGoal) * 100,
+    100
   );
 
   const generalTotal =
@@ -77,6 +78,7 @@ function TotalCard(
       style={{
         padding: "15px",
       }}
+
     >
       <div
         style={{
@@ -306,7 +308,9 @@ function TotalCard(
 
         </div>
 
+
         <div
+
           style={{
             textAlign: "center",
             marginTop: "12px",
@@ -320,38 +324,31 @@ function TotalCard(
             {totalPackages} / {packageGoal}
           </strong>
 
-          {!goalReached && (
-            <p
-              style={{
-                margin: "8px 0 0",
-                color: "#666",
-              }}
-            >
-              🎯 Kalan Paket:{" "}
-              <strong>
-                {Math.max(
-                  0,
-                  packageGoal - totalPackages
-                )}
-              </strong>
-            </p>
-          )}
-        </div>
-
-        {goalReached && (
-          <div
+          <p
             style={{
-              background: "#d4edda",
-              color: "#155724",
-              padding: "12px",
-              borderRadius: "12px",
-              marginTop: "px30"
+              color: "#666",
+              marginTop: 8,
+              marginBottom: 12,
+              fontSize: "14px",
             }}
           >
-            🎉 Tebrikler!
-            Hedefe ulaştın.
-          </div>
-        )}
+            Hedefe kalan: <strong>{remainingPackages}</strong> paket
+          </p>
+
+          {goalReached && (
+            <div
+              style={{
+                background: "#d4edda",
+                color: "#155724",
+                padding: "12px",
+                borderRadius: "12px",
+                marginTop: "30px",
+              }}
+            >
+              🎉 Tebrikler! Hedefe ulaştın.
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
