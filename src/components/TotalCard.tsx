@@ -32,8 +32,20 @@ function TotalCard(
     monthlyBonus;
 
   const goalReached =
-    totalPackages >= packageGoal
+    totalPackages >= packageGoal;
+  const progressColor =
+    progress >= 100
+      ? "#28a745"
+      : progress >= 70
+        ? "#ffc107"
+        : progress >= 40
+          ? "#fd7e14"
+          : "#dc3545";
 
+  const remainingPackages = Math.max(
+    0,
+    packageGoal - totalPackages
+  );
   const workedDays =
     Math.max(
       1,
@@ -243,34 +255,34 @@ function TotalCard(
           Paket Hedefi
         </h3>
         <input
-  type="text"
-  inputMode="numeric"
-  value={goalInput}
-  onChange={(e) => {
-    const value = e.target.value.replace(
-      /\D/g,
-      ""
-    );
+          type="text"
+          inputMode="numeric"
+          value={goalInput}
+          onChange={(e) => {
+            const value = e.target.value.replace(
+              /\D/g,
+              ""
+            );
 
-    setGoalInput(value);
+            setGoalInput(value);
 
-    if (value !== "") {
-      onGoalChange(Number(value));
-    }
-  }}
-  placeholder="2500"
-  style={{
-    width: "100%",
-    padding: "12px",
-    marginBottom: "15px",
-    borderRadius: "12px",
-    border: "1px solid #ddd",
-    fontSize: "18px",
-    fontWeight: 600,
-    textAlign: "center",
-    boxSizing: "border-box",
-  }}
-/>
+            if (value !== "") {
+              onGoalChange(Number(value));
+            }
+          }}
+          placeholder="2500"
+          style={{
+            width: "100%",
+            padding: "12px",
+            marginBottom: "15px",
+            borderRadius: "12px",
+            border: "1px solid #ddd",
+            fontSize: "18px",
+            fontWeight: 600,
+            textAlign: "center",
+            boxSizing: "border-box",
+          }}
+        />
 
         <div
           style={{
@@ -279,20 +291,52 @@ function TotalCard(
             background: "#eee",
             borderRadius: "999px",
             overflow: "hidden",
+
           }}
+
         >
           <div
             style={{
               width: `${progress}%`,
               height: "100%",
-              background: "#ff6b00",
+              background: progressColor,
+
             }}
           />
+
         </div>
 
-        <p>
-          {totalPackages} / {packageGoal}
-        </p>
+        <div
+          style={{
+            textAlign: "center",
+            marginTop: "12px",
+          }}
+        >
+          <strong
+            style={{
+              fontSize: "18px",
+            }}
+          >
+            {totalPackages} / {packageGoal}
+          </strong>
+
+          {!goalReached && (
+            <p
+              style={{
+                margin: "8px 0 0",
+                color: "#666",
+              }}
+            >
+              🎯 Kalan Paket:{" "}
+              <strong>
+                {Math.max(
+                  0,
+                  packageGoal - totalPackages
+                )}
+              </strong>
+            </p>
+          )}
+        </div>
 
         {goalReached && (
           <div

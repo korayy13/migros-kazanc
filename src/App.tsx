@@ -14,6 +14,10 @@ import Expenses from "./pages/Expenses";
 import Statistics from "./pages/Statistics";
 import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
+import CompanySelector from "./components/CompanySelector";
+
+import { companies } from "./data/companies";
+import type { Company } from "./data/companies";
 
 type DayData = {
   hour: number;
@@ -84,6 +88,21 @@ function createMonthData(dayCount: number) {
 
 function App() {
   const today = new Date();
+  const [selectedCompany, setSelectedCompany] =
+    useState<Company>(() => {
+      const saved =
+        localStorage.getItem("selected-company");
+
+      if (saved) {
+        const company = companies.find(
+          (c) => c.id === saved
+        );
+
+        if (company) return company;
+      }
+
+      return companies[0];
+    });
 
   const getGoalStorageKey = (
     selectedYear: number,
@@ -154,9 +173,16 @@ function App() {
       JSON.stringify(daysData)
     );
   }, [daysData, year, month]);
+  useEffect(() => {
+    localStorage.setItem(
+      "selected-company",
+      selectedCompany.id
+    );
+  }, [selectedCompany]);
 
   const totalHourMoney = daysData.reduce(
-    (sum, day) => sum + day.hour * 177,
+    (sum, day) =>
+      sum + day.hour * selectedCompany.hourPrice,
     0
   );
 
@@ -253,6 +279,64 @@ function App() {
       {currentPage === "dashboard" && (
         <>
           <TopBar />
+
+          <CompanySelector
+            companies={companies}
+            selectedCompany={selectedCompany}
+            onChange={setSelectedCompany}
+          />
+
+          <div
+            style={{
+              background: "#fff",
+              borderRadius: 18,
+              padding: 18,
+              marginBottom: 15,
+              boxShadow: "0 6px 18px rgba(0,0,0,.08)",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexWrap: "wrap",
+                gap: 10,
+              }}
+            >
+              <div>
+                <div
+                  style={{
+                    fontSize: 14,
+                    color: "#777",
+                  }}
+                >
+                  🚚 Aktif Firma
+                </div>
+
+                <div
+                  style={{
+                    fontSize: 22,
+                    fontWeight: "bold",
+                    marginTop: 4,
+                  }}
+                >
+                  {selectedCompany.name}
+                </div>
+              </div>
+
+              <div
+                style={{
+                  textAlign: "right",
+                }}
+              >
+                <div>⏰ {selectedCompany.hourPrice} TL / Saat</div>
+
+                <div>📦 {selectedCompany.packagePrice} TL / Paket</div>
+              </div>
+            </div>
+          </div>
+
           <TodayCard
             hour={todayData.hour}
             pkg={todayData.pkg}
