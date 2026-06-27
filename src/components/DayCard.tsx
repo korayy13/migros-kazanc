@@ -6,9 +6,11 @@ type Props = {
   pkg: number;
   bonus: number;
   vacation: boolean;
+  defaultOpen?: boolean;
   onVacationChange: (value: boolean) => void;
   onHourChange: (value: number) => void;
   onPkgChange: (value: number) => void;
+  onNextDay?: () => void;
 };
 
 function DayCard({
@@ -17,20 +19,26 @@ function DayCard({
   pkg,
   bonus,
   vacation,
+  defaultOpen = false,
   onVacationChange,
   onHourChange,
   onPkgChange,
+  onNextDay,
 }: Props) {
-  const [open, setOpen] = useState(false);
-
+  const [open, setOpen] = useState(defaultOpen);
   const hourIncome = hour * 177;
-  const packageInputRef = useRef<HTMLInputElement>(null);
+  const packageInputRef =
+    useRef<HTMLInputElement>(null);
+  const hourInputRef =
+    useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (open) {
-      packageInputRef.current?.focus();
+    if (open || defaultOpen) {
+      setTimeout(() => {
+        packageInputRef.current?.focus();
+      }, 150);
     }
-  }, [open]);
+  }, [open, defaultOpen, day]);
 
   const totalIncome = hourIncome + bonus;
 
@@ -45,10 +53,16 @@ function DayCard({
       }}
     >
       <div
-        onClick={() => setOpen(!open)}
+        onClick={() => {
+          if (!defaultOpen) {
+            setOpen(!open);
+          }
+        }}
         style={{
           padding: "18px",
-          cursor: "pointer",
+          cursor: defaultOpen
+            ? "default"
+            : "pointer",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
@@ -161,11 +175,20 @@ function DayCard({
           </div>
 
           <input
+            ref={hourInputRef}
             type="number"
             placeholder="Çalışılan Saat"
             value={hour || ""}
             disabled={vacation}
-            onChange={(e) => onHourChange(Number(e.target.value))}
+            onChange={(e) =>
+              onHourChange(Number(e.target.value))
+            }
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                onNextDay?.();
+              }
+            }}
             style={{
               width: "100%",
               padding: "12px",
@@ -184,6 +207,12 @@ function DayCard({
             value={pkg || ""}
             disabled={vacation}
             onChange={(e) => onPkgChange(Number(e.target.value))}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                hourInputRef.current?.focus();
+              }
+            }}
             style={{
               width: "100%",
               padding: "12px",

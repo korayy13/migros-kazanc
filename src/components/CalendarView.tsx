@@ -46,15 +46,18 @@ function CalendarView({
         {daysData.map((day, index) => {
           const dayNumber = index + 1;
 
-          let background =
-            "#f3f3f3";
+          let background = "#f3f3f3";
 
-          if (
-            day.hour > 0 ||
-            day.pkg > 0
-          ) {
-            background =
-              "#ff6b00";
+          if (day.vacation) {
+            background = "#d9534f";
+          } else if (day.pkg >= 70) {
+            background = "#28a745";
+          } else if (day.pkg >= 50) {
+            background = "#ffc107";
+          } else if (day.pkg >= 30) {
+            background = "#ff9800";
+          } else if (day.pkg > 0) {
+            background = "#dc3545";
           }
 
           if (day.vacation) {
@@ -65,34 +68,73 @@ function CalendarView({
           return (
             <div
               key={index}
-              onClick={() =>
-                onDaySelect(index)
-              }
+              onClick={() => onDaySelect(index)}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.08)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+              }}
               style={{
-                height: 50,
-                borderRadius: 12,
+                height: 80,
+                borderRadius: 16,
                 background,
                 color:
-                  background ===
-                  "#f3f3f3"
+                  background === "#f3f3f3"
                     ? "#333"
                     : "#fff",
                 display: "flex",
-                justifyContent:
-                  "center",
-                alignItems:
-                  "center",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
                 fontWeight: 700,
                 border:
-                  dayNumber ===
-                  today
+                  dayNumber === today
                     ? "3px solid #2196f3"
                     : "none",
                 cursor: "pointer",
-                transition: ".2s",
+                transition: "all .2s ease",
+                boxShadow: "0 4px 10px rgba(0,0,0,.15)",
               }}
             >
-              {dayNumber}
+              <>
+                <div
+                  style={{
+                    fontSize: 15,
+                    fontWeight: 700,
+                  }}
+                >
+                  {dayNumber}
+                </div>
+
+                {day.vacation ? (
+                  <div
+                    style={{
+                      fontSize: 11,
+                    }}
+                  >
+                    🏖️
+                  </div>
+                ) : (
+                  <>
+                    <div
+                      style={{
+                        fontSize: 11,
+                      }}
+                    >
+                      📦 {day.pkg}
+                    </div>
+
+                    <div
+                      style={{
+                        fontSize: 11,
+                      }}
+                    >
+                      ⏰ {day.hour}
+                    </div>
+                  </>
+                )}
+              </>
             </div>
           );
         })}

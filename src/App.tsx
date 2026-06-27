@@ -1,3 +1,4 @@
+import TodayCard from "./components/TodayCard";
 import CalendarView from "./components/CalendarView";
 import TopBar from "./components/TopBar";
 import MonthYearPicker from "./components/MonthYearPicker";
@@ -28,8 +29,6 @@ type PageType =
   | "statistics"
   | "settings"
   | "profile";
-
-const PACKAGE_GOAL = 1500;
 
 const dailyBonusTable = [
   { pkg: 76, bonus: 4830 },
@@ -86,6 +85,16 @@ function createMonthData(dayCount: number) {
 function App() {
   const today = new Date();
 
+  const getGoalStorageKey = (
+    selectedYear: number,
+    selectedMonth: number
+  ) => {
+    return `migros-goal-${selectedYear}-${selectedMonth}`;
+  };
+
+  const [packageGoal, setPackageGoal] =
+    useState(1500);
+
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth());
 
@@ -107,10 +116,10 @@ function App() {
 
   const [celebrated, setCelebrated] =
     useState(false);
-   
-    const [selectedDay, setSelectedDay] =
-  useState<number | null>(null);
-    
+
+  const [selectedDay, setSelectedDay] =
+    useState<number | null>(null);
+
 
   useEffect(() => {
     const saved = localStorage.getItem(
@@ -123,6 +132,21 @@ function App() {
 
     setDaysData(data);
   }, [year, month]);
+
+  useEffect(() => {
+    const savedGoal = localStorage.getItem(
+      getGoalStorageKey(year, month)
+    );
+
+    setPackageGoal(savedGoal ? Number(savedGoal) : 1500);
+  }, [year, month]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      getGoalStorageKey(year, month),
+      String(packageGoal)
+    );
+  }, [packageGoal, year, month]);
 
   useEffect(() => {
     localStorage.setItem(
@@ -156,10 +180,21 @@ function App() {
   const vacationDays = daysData.filter(
     (day) => day.vacation
   ).length;
+  const todayIndex = new Date().getDate() - 1;
+
+  const todayData =
+    todayIndex >= 0 &&
+      todayIndex < daysData.length
+      ? daysData[todayIndex]
+      : {
+        hour: 0,
+        pkg: 0,
+        vacation: false,
+      };
 
   useEffect(() => {
     if (
-      totalPackages >= PACKAGE_GOAL &&
+      totalPackages >= packageGoal &&
       !celebrated
     ) {
       confetti({
@@ -171,7 +206,7 @@ function App() {
       setCelebrated(true);
     }
 
-    if (totalPackages < PACKAGE_GOAL) {
+    if (totalPackages < packageGoal) {
       setCelebrated(false);
     }
   }, [totalPackages, celebrated]);
@@ -218,6 +253,11 @@ function App() {
       {currentPage === "dashboard" && (
         <>
           <TopBar />
+          <TodayCard
+            hour={todayData.hour}
+            pkg={todayData.pkg}
+            bonus={getDailyBonus(todayData.pkg)}
+          />
 
           <MonthYearPicker
             year={year}
@@ -232,105 +272,119 @@ function App() {
             totalDailyBonus={totalDailyBonus}
             monthlyBonus={monthlyBonus}
             vacationDays={vacationDays}
+            packageGoal={packageGoal}
           />
 
           <CalendarView
-  daysData={daysData}
-  onDaySelect={(dayIndex) =>
-    setSelectedDay(dayIndex)
-  }
-/>
+            daysData={daysData}
+            onDaySelect={(dayIndex) =>
+              setSelectedDay(dayIndex)
+            }
+          />
 
-{selectedDay !== null && (
-  <>
-    <div
-      onClick={() =>
-        setSelectedDay(null)
-      }
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(0,0,0,.6)",
-        zIndex: 999,
-      }}
-    />
+          {selectedDay !== null && (
+            <>
+              <div
+                onClick={() =>
+                  setSelectedDay(null)
+                }
+                style={{
+                  position: "fixed",
+                  inset: 0,
+                  background: "rgba(0,0,0,.6)",
+                  zIndex: 999,
+                }}
+              />
 
-    <div
-      style={{
-        position: "fixed",
-        top: "50%",
-        left: "50%",
-        transform:
-          "translate(-50%, -50%)",
-        width: "95%",
-        maxWidth: "600px",
-        maxHeight: "90vh",
-        overflowY: "auto",
-        zIndex: 1000,
-      }}
-    >
-      <DayCard
-        day={selectedDay + 1}
-        hour={
-          daysData[selectedDay].hour
-        }
-        pkg={
-          daysData[selectedDay].pkg
-        }
-        vacation={
-          daysData[selectedDay]
-            .vacation
-        }
-        bonus={
-          daysData[selectedDay]
-            .vacation
-            ? 0
-            : getDailyBonus(
-                daysData[selectedDay]
-                  .pkg
-              )
-        }
-        onVacationChange={(value) =>
-          updateVacation(
-            selectedDay,
-            value
-          )
-        }
-        onHourChange={(value) =>
-          updateHour(
-            selectedDay,
-            value
-          )
-        }
-        onPkgChange={(value) =>
-          updatePkg(
-            selectedDay,
-            value
-          )
-        }
-      />
-
-      <button
-        onClick={() =>
-          setSelectedDay(null)
-        }
-        style={{
-          width: "100%",
-          padding: "14px",
-          border: "none",
-          borderRadius: "14px",
-          background: "#ff6b00",
-          color: "white",
-          fontWeight: 700,
-          cursor: "pointer",
-          marginTop: "10px",
-        }}
-      >
-        Kapat
-      </button>
-    </div>
-  </>
-)}
+              <div
+                style={{
+                  position: "fixed",
+                  top: "50%",
+                  left: "50%",
+                  transform:
+                    "translate(-50%, -50%)",
+                  width: "95%",
+                  maxWidth: "600px",
+                  maxHeight: "90vh",
+                  overflowY: "auto",
+                  zIndex: 1000,
+                }}
+              >
+                <DayCard
+                  day={selectedDay + 1}
+                  hour={daysData[selectedDay].hour}
+                  pkg={daysData[selectedDay].pkg}
+                  vacation={daysData[selectedDay].vacation}
+                  bonus={
+                    daysData[selectedDay].vacation
+                      ? 0
+                      : getDailyBonus(daysData[selectedDay].pkg)
+                  }
+                  defaultOpen={true}
+                  onVacationChange={(value) =>
+                    updateVacation(selectedDay, value)
+                  }
+                  onHourChange={(value) =>
+                    updateHour(selectedDay, value)
+                  }
+                  onPkgChange={(value) =>
+                    updatePkg(selectedDay, value)
+                  }
+                  onNextDay={() => {
+                    if (
+                      selectedDay !== null &&
+                      selectedDay < daysData.length - 1
+                    ) {
+                      setSelectedDay(selectedDay + 1);
+                    }
+                  }}
+                />
+                <button
+                  onClick={() => {
+                    setSelectedDay(null);
+                  }}
+                  style={{
+                    width: "100%",
+                    padding: "14px",
+                    border: "none",
+                    borderRadius: "14px",
+                    background: "#28a745",
+                    color: "white",
+                    fontWeight: 700,
+                    fontSize: "16px",
+                    cursor: "pointer",
+                    marginTop: "10px",
+                  }}
+                >
+                  💾 Kaydet ve Kapat
+                </button>
+                <button
+                  onClick={() => {
+                    if (
+                      selectedDay !== null &&
+                      selectedDay < daysData.length - 1
+                    ) {
+                      setSelectedDay(selectedDay + 1);
+                    }
+                  }}
+                  style={{
+                    width: "100%",
+                    padding: "14px",
+                    border: "none",
+                    borderRadius: "14px",
+                    background: "#ff6b00",
+                    color: "white",
+                    fontWeight: 700,
+                    fontSize: "16px",
+                    cursor: "pointer",
+                    marginTop: "10px",
+                  }}
+                >
+                  ➡️ Kaydet ve Sonraki Gün
+                </button>
+              </div>
+            </>
+          )}
         </>
       )}
 
